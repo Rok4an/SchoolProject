@@ -26,11 +26,11 @@ public class Address {
             return false;
         }
 
-        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String letters = "abcdefghijklmnopqrstuvwxyz";
         String nums = "123456789";
 
         for (int i = 0; i < postalCode.length(); i++) {
-            char c = postalCode.toUpperCase().charAt(i);
+            char c = postalCode.toLowerCase().charAt(i);
             if (i % 2 == 0) {
                 if (!letters.contains(String.valueOf(c))) {
                     return false;
