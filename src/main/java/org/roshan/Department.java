@@ -35,4 +35,13 @@ public class Department {
             this.departmentId = null;
         }
     }
+
+    public void setDepartmentName(String departmentName) {
+        if (isDepartmentNameValid(departmentName)) {
+            this.departmentName = departmentName;
+        } else   {
+            this.departmentName = null;
+            this.departmentId = null;
+        }
+    }
 }
