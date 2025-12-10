@@ -10,7 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class Address {
-    private Integer streetNo;
+    private int streetNo;
     private String street;
     private String city;
     private Province province;
@@ -19,24 +19,21 @@ public class Address {
     /**
      * Checks if the postal code is a valid one
      * @param postalCode the postal code itself
-     * @return true if the postal code is actually a postal code if not it returns false
+     * @return true if the postal code is an actual postal code if not it returns false
      */
     public static boolean isPostalCodeValid(String postalCode) {
         if (postalCode == null || postalCode.length() != 6) {
             return false;
         }
 
-        String letters = "abcdefghijklmnopqrstuvwxyz";
-        String nums = "123456789";
-
         for (int i = 0; i < postalCode.length(); i++) {
-            char c = postalCode.toLowerCase().charAt(i);
+            char c = postalCode.charAt(i);
             if (i % 2 == 0) {
-                if (!letters.contains(String.valueOf(c))) {
+                if (!Character.isLetter(c)) {
                     return false;
                 }
             } else {
-                if (!nums.contains(String.valueOf(c))) {
+                if (!Character.isDigit(c)) {
                     return false;
                 }
             }
@@ -52,7 +49,7 @@ public class Address {
             this.province = province;
             this.postalCode = postalCode.toUpperCase();
         } else {
-            this.streetNo = null;
+            this.streetNo = 0;
             this.street = null;
             this.city = null;
             this.province = null;
