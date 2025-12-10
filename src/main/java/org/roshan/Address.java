@@ -21,7 +21,7 @@ public class Address {
      * @param postalCode the postal code itself
      * @return true if the postal code is an actual postal code if not it returns false
      */
-    public static boolean isPostalCodeValid(String postalCode) {
+    private static boolean isPostalCodeValid(String postalCode) {
         if (postalCode == null || postalCode.length() != 6) {
             return false;
         }
