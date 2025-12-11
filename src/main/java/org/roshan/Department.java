@@ -13,7 +13,7 @@ public class Department {
 
     private static int nextId = 1;
 
-    public static boolean isDepartmentNameValid(String departmentName) {
+    private static boolean isDepartmentNameValid(String departmentName) {
         if (departmentName == null || departmentName.isEmpty()) {
             return false;
         }
