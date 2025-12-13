@@ -20,17 +20,15 @@ public class Assignment {
 
     /**
      * Calculates the average score of this assignment.
-     * @return the average score as a double, or 0.0 if no scores exist
      */
-    public double calcAssignmentAvg() {
-        if (scores.isEmpty()) {
-            return 0.0;
-        }
+    public void calcAssignmentAvg() {
         double sum = 0;
+
         for (int score : scores) {
             sum += score;
         }
-        return sum / scores.size();
+
+        double average = sum / scores.size();
     }
 
     /**
