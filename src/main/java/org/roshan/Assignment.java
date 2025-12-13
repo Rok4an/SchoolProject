@@ -17,6 +17,7 @@ public class Assignment {
         this.scores = new ArrayList<>();
     }
 
+
     /**
      * Calculates the average score of this assignment.
      * @return the average score as a double, or 0.0 if no scores exist
@@ -61,4 +62,10 @@ public class Assignment {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Assignment ID: " + assignmentId +
+                ", Name: " + assignmentName +
+                ", Weight: " + weight;
+    }
 }
