@@ -67,6 +67,9 @@ public class Course {
             double weightedTotal = 0.0;
 
             for (Assignment assignment : assignments) {
+                if (assignment.getScores().get(i) <= i) {
+                    continue;
+                }
                 Integer score = assignment.getScores().get(i);
                 if (score != null) {
                     weightedTotal += score * (assignment.getWeight() / 100.0);
@@ -83,7 +86,7 @@ public class Course {
     }
 
     public boolean addAssignment(String assignmentName, double weight, int maxScore) {
-        Assignment newAssignment = new Assignment(assignmentName, weight, maxScore );
+        Assignment newAssignment = new Assignment(assignmentName, weight);
         assignments.add(newAssignment);
         for (int i = 0; i < registeredStudents.size(); i++) {
             newAssignment.getScores().add(null);
@@ -92,19 +95,9 @@ public class Course {
     }
 
     public void generateScores() {
-        Random random = new Random();
-
-        int numOfStudents = registeredStudents.size();
-
         for (Assignment assignment : assignments) {
-            for (int studentIdx = 0; studentIdx < numOfStudents; studentIdx++) {
-                int maxScore = 100;
-                int randomScore = random.nextInt(maxScore + 1);
-
-                assignment.getScores().set(studentIdx, randomScore);
-            }
+            assignment.generateRandomScore();
         }
-
         this.calcStudentsAverage();
     }
 
