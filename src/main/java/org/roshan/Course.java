@@ -41,4 +41,44 @@ public class Course {
         return sum == sumOfWeights;
     }
 
+    public boolean registerStudent(Student student) {
+        if (registeredStudents.contains(student)) {
+            return false;
+        }
+
+        registeredStudents.add(student);
+
+        for (Assignment assignment : assignments) {
+            assignment.getScores().add(null);
+
+            finalScores.add(null);
+        }
+
+        return true;
+    }
+
+    public int[] calcStudentsAverage() {
+        int numOfStudents = registeredStudents.size();
+        int[] finalScoresArray = new int[numOfStudents];
+
+        finalScores.clear();
+
+        for (int i = 0; i < numOfStudents; i++) {
+            double weightedTotal = 0.0;
+
+            for (Assignment assignment : assignments) {
+                Integer score = assignment.getScores().get(i);
+                if (score != null) {
+                    weightedTotal += score * (assignment.getWeight() / 100.0);
+                }
+            }
+
+            int roundedScore = (int) Math.round(weightedTotal);
+
+            finalScores.add((double) roundedScore);
+            finalScoresArray[i] = roundedScore;
+        }
+
+        return finalScoresArray;
+    }
 }
