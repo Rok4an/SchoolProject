@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 @EqualsAndHashCode
 @Getter
@@ -23,24 +22,33 @@ public class Course {
 
     public Course(String courseName, double credits, Department department) {
         this.courseId = "C" + "-" + department.getDepartmentId() + "-" + String.format("%02d", nextId++);
-        this.courseName = courseName;
+        this.courseName = Util.toTitleCase(courseName);
         this.credits = credits;
         this.department = department;
         this.assignments = new ArrayList<>();
         this.registeredStudents = new ArrayList<>();
+        this.finalScores = new ArrayList<>();
     }
 
+    /**
+     * Checks if the sum of all assignment weights is exactly 100.
+     * @return true if the total weight is 100, false otherwise
+     */
     public boolean isAssignmentWeightValid() {
         double sum = 0;
-        double sumOfWeights = 100;
 
         for (Assignment assignment : assignments) {
             sum += assignment.getWeight();
         }
 
-        return sum == sumOfWeights;
+        return Math.abs(sum - 100.0) < 0.0001;
     }
 
+    /**
+     * Registers a student in this course and initializes score and final score entries.
+     * @param student the student to register
+     * @return true if the student was added, false if already registered
+     */
     public boolean registerStudent(Student student) {
         if (registeredStudents.contains(student)) {
             return false;
@@ -50,13 +58,17 @@ public class Course {
 
         for (Assignment assignment : assignments) {
             assignment.getScores().add(null);
-
-            finalScores.add(null);
         }
+
+        finalScores.add(null);
 
         return true;
     }
 
+    /**
+     * Calculates the weighted average score for each student in this course.
+     * @return an array of final integer scores, one per registered student
+     */
     public int[] calcStudentsAverage() {
         int numOfStudents = registeredStudents.size();
         int[] finalScoresArray = new int[numOfStudents];
@@ -67,7 +79,7 @@ public class Course {
             double weightedTotal = 0.0;
 
             for (Assignment assignment : assignments) {
-                if (assignment.getScores().get(i) <= i) {
+                if (assignment.getScores().size() <= i) {
                     continue;
                 }
                 Integer score = assignment.getScores().get(i);
@@ -85,6 +97,14 @@ public class Course {
         return finalScoresArray;
     }
 
+    /**
+     * Adds a new assignment to this course and creates empty score slots
+     * for all already registered students.
+     * @param assignmentName the name of the assignment
+     * @param weight the weight of the assignment in the course total
+     * @param maxScore the maximum score
+     * @return true always, after adding the assignment
+     */
     public boolean addAssignment(String assignmentName, double weight, int maxScore) {
         Assignment newAssignment = new Assignment(assignmentName, weight);
         assignments.add(newAssignment);
@@ -94,6 +114,10 @@ public class Course {
         return true;
     }
 
+    /**
+     * Generates random scores for all assignments and students,
+     * then updates the final scores for each student.
+     */
     public void generateScores() {
         for (Assignment assignment : assignments) {
             assignment.generateRandomScore();
@@ -102,6 +126,10 @@ public class Course {
         this.calcStudentsAverage();
     }
 
+    /**
+     * Displays a table of students, their assignment scores,
+     * final scores, and assignment averages for this course.
+     */
     public void displayScore() {
         System.out.println("Course: " + courseName + " (" + courseId + ")");
         if (registeredStudents.isEmpty()) {
@@ -142,6 +170,10 @@ public class Course {
         System.out.println();
     }
 
+    /**
+     * Returns a short string with basic course information.
+     * @return simplified course description
+     */
     public String toSimplifiedString() {
         return "Course ID: " + courseId +
                 ", Name: " + courseName +
