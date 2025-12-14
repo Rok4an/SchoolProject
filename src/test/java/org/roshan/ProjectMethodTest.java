@@ -1,10 +1,8 @@
 package org.roshan;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 
 class ProjectMethodsTest {
 
@@ -16,7 +14,7 @@ class ProjectMethodsTest {
         String input = "john doe";
         String expected = "John Doe";
         String actual = Util.toTitleCase(input);
-        assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -25,16 +23,16 @@ class ProjectMethodsTest {
         String input = "cOmPuTeR sCiEnCe";
         String expected = "Computer Science";
         String actual = Util.toTitleCase(input);
-        assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("toTitleCase long string still works")
     void testToTitleCase3() {
-        String input = "Hi my name is John Doe";
-        String expected = "Hi My Name Is John Doe";
+        String input = "very long department name with many words";
+        String expected = "Very Long Department Name With Many Words";
         String actual = Util.toTitleCase(input);
-        assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     //Assignment.calcAssignmentAvg
@@ -49,7 +47,7 @@ class ProjectMethodsTest {
 
         double expected = 90.0; // (80 + 100) / 2
         double actual = assignment.calcAssignmentAvg();
-        assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual, 0.0001);
     }
 
     @Test
@@ -62,7 +60,7 @@ class ProjectMethodsTest {
 
         double expected = 100.0;
         double actual = assignment.calcAssignmentAvg();
-        assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual, 0.0001);
     }
 
     @Test
@@ -75,7 +73,7 @@ class ProjectMethodsTest {
 
         double expected = (0 + 50 + 100) / 3.0;
         double actual = assignment.calcAssignmentAvg();
-        assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual, 0.0001);
     }
 
     //Assignment.generateRandomScore
@@ -92,11 +90,12 @@ class ProjectMethodsTest {
 
         int expectedSize = 3;
         int actualSize = assignment.getScores().size();
-        assertEquals(expectedSize, actualSize);
+        Assertions.assertEquals(expectedSize, actualSize);
 
         for (Integer score : assignment.getScores()) {
-            assertNotNull(score);
-            assertTrue(score >= 0 && score <= 100);
+            // score between 0 and 100
+            boolean inRange = (score != null && score >= 0 && score <= 100);
+            Assertions.assertEquals(true, inRange);
         }
     }
 
@@ -112,11 +111,11 @@ class ProjectMethodsTest {
 
         int expectedSize = 100;
         int actualSize = assignment.getScores().size();
-        assertEquals(expectedSize, actualSize);
+        Assertions.assertEquals(expectedSize, actualSize);
 
         for (Integer score : assignment.getScores()) {
-            assertNotNull(score);
-            assertTrue(score >= 0 && score <= 100);
+            boolean inRange = (score != null && score >= 0 && score <= 100);
+            Assertions.assertEquals(true, inRange);
         }
     }
 
@@ -128,10 +127,13 @@ class ProjectMethodsTest {
 
         assignment.generateRandomScore();
 
-        assertEquals(1, assignment.getScores().size());
+        int expectedSize = 1;
+        int actualSize = assignment.getScores().size();
+        Assertions.assertEquals(expectedSize, actualSize);
+
         Integer score = assignment.getScores().get(0);
-        assertNotNull(score);
-        assertTrue(score >= 0 && score <= 100);
+        boolean inRange = (score != null && score >= 0 && score <= 100);
+        Assertions.assertEquals(true, inRange);
     }
 
     //Course.isAssignmentWeightValid
@@ -147,7 +149,7 @@ class ProjectMethodsTest {
 
         boolean expected = true;
         boolean actual = course.isAssignmentWeightValid();
-        assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -161,7 +163,7 @@ class ProjectMethodsTest {
 
         boolean expected = false;
         boolean actual = course.isAssignmentWeightValid();
-        assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -175,7 +177,9 @@ class ProjectMethodsTest {
         course.addAssignment("A3", 25, 100);
         course.addAssignment("A4", 25, 100);
 
-        assertTrue(course.isAssignmentWeightValid());
+        boolean expected = true;
+        boolean actual = course.isAssignmentWeightValid();
+        Assertions.assertEquals(expected, actual);
     }
 
     //Course.calcStudentsAverage
@@ -193,17 +197,17 @@ class ProjectMethodsTest {
         Student student = new Student("john doe", Student.Gender.MALE, addr, department);
 
         boolean registered = student.registerCourse(course);
-        assertTrue(registered);
+        Assertions.assertEquals(true, registered);
 
         course.getAssignments().get(0).getScores().set(0, 80);
         course.getAssignments().get(1).getScores().set(0, 90);
 
         int[] actual = course.calcStudentsAverage();
         int expectedLen = 1;
-        assertEquals(expectedLen, actual.length);
+        Assertions.assertEquals(expectedLen, actual.length);
 
         int expectedScore = 85;
-        assertEquals(expectedScore, actual[0]);
+        Assertions.assertEquals(expectedScore, actual[0]);
     }
 
     @Test
@@ -222,9 +226,11 @@ class ProjectMethodsTest {
         }
 
         int[] actual = course.calcStudentsAverage();
-        assertEquals(50, actual.length);
+        int expectedLen = 50;
+        Assertions.assertEquals(expectedLen, actual.length);
+
         for (int score : actual) {
-            assertEquals(100, score);
+            Assertions.assertEquals(100, score);
         }
     }
 
@@ -246,8 +252,10 @@ class ProjectMethodsTest {
         course.getAssignments().get(1).getScores().set(0, 0);
 
         int[] actual = course.calcStudentsAverage();
-        assertEquals(1, actual.length);
-        assertEquals(0, actual[0]);
+        int expectedLen = 1;
+        Assertions.assertEquals(expectedLen, actual.length);
+        int expectedScore = 0;
+        Assertions.assertEquals(expectedScore, actual[0]);
     }
 
     //Student.registerCourse
@@ -263,13 +271,13 @@ class ProjectMethodsTest {
         Student student = new Student("john doe", Student.Gender.MALE, addr, department);
 
         boolean result = student.registerCourse(course);
-        assertTrue(result);
-        assertTrue(student.getRegisteredCourses().contains(course));
-        assertTrue(course.getRegisteredStudents().contains(student));
+        Assertions.assertEquals(true, result);
+        Assertions.assertEquals(true, student.getRegisteredCourses().contains(course));
+        Assertions.assertEquals(true, course.getRegisteredStudents().contains(student));
 
         int expectedSlots = 1;
         int actualSlots = course.getAssignments().get(0).getScores().size();
-        assertEquals(expectedSlots, actualSlots);
+        Assertions.assertEquals(expectedSlots, actualSlots);
     }
 
     @Test
@@ -283,8 +291,8 @@ class ProjectMethodsTest {
         boolean first = student.registerCourse(course);
         boolean second = student.registerCourse(course);
 
-        assertTrue(first);
-        assertFalse(second);
+        Assertions.assertEquals(true, first);
+        Assertions.assertEquals(false, second);
     }
 
     @Test
@@ -297,11 +305,13 @@ class ProjectMethodsTest {
         Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
         Student student = new Student("john doe", Student.Gender.MALE, addr, department);
 
-        assertTrue(student.registerCourse(course1));
-        assertTrue(student.registerCourse(course2));
+        boolean r1 = student.registerCourse(course1);
+        boolean r2 = student.registerCourse(course2);
 
-        assertTrue(student.getRegisteredCourses().contains(course1));
-        assertTrue(student.getRegisteredCourses().contains(course2));
+        Assertions.assertEquals(true, r1);
+        Assertions.assertEquals(true, r2);
+        Assertions.assertEquals(true, student.getRegisteredCourses().contains(course1));
+        Assertions.assertEquals(true, student.getRegisteredCourses().contains(course2));
     }
 
     //Student.dropCourse
@@ -319,13 +329,13 @@ class ProjectMethodsTest {
         student.registerCourse(course);
         boolean result = student.dropCourse(course);
 
-        assertTrue(result);
-        assertFalse(student.getRegisteredCourses().contains(course));
-        assertFalse(course.getRegisteredStudents().contains(student));
+        Assertions.assertEquals(true, result);
+        Assertions.assertEquals(false, student.getRegisteredCourses().contains(course));
+        Assertions.assertEquals(false, course.getRegisteredStudents().contains(student));
 
         int expectedSize = 0;
         int actualSize = course.getAssignments().get(0).getScores().size();
-        assertEquals(expectedSize, actualSize);
+        Assertions.assertEquals(expectedSize, actualSize);
     }
 
     @Test
@@ -337,7 +347,7 @@ class ProjectMethodsTest {
         Student student = new Student("john doe", Student.Gender.MALE, addr, department);
 
         boolean result = student.dropCourse(course);
-        assertFalse(result);
+        Assertions.assertEquals(false, result);
     }
 
     @Test
@@ -356,8 +366,8 @@ class ProjectMethodsTest {
         student.registerCourse(course2);
 
         boolean dropped = student.dropCourse(course1);
-        assertTrue(dropped);
-        assertFalse(student.getRegisteredCourses().contains(course1));
-        assertTrue(student.getRegisteredCourses().contains(course2));
+        Assertions.assertEquals(true, dropped);
+        Assertions.assertEquals(false, student.getRegisteredCourses().contains(course1));
+        Assertions.assertEquals(true, student.getRegisteredCourses().contains(course2));
     }
 }
