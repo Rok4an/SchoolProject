@@ -155,20 +155,20 @@ public class Course {
                 ", Name: " + courseName +
                 ", Credits: " + credits +
                 ", Department: " + department.getDepartmentName() +
-                System.lineSeparator();
+                "\n";
 
         result += "Assignments: ";
-        for (Assignment a : assignments) {
-            result += a.getAssignmentName() + " (" + a.getWeight() + "%), ";
+        for (Assignment assign : assignments) {
+            result += assign.getAssignmentName() + " (" + assign.getWeight() + "%), ";
         }
-        result += System.lineSeparator();
+        result += "\n";
 
         result += "Students: ";
-        for (Student s : registeredStudents) {
-            result += s.getStudentId() + " - " + s.getStudentName() +
-                    " (" + s.getDepartment().getDepartmentName() + "), ";
+        for (Student student : registeredStudents) {
+            result += student.getStudentId() + " - " + student.getStudentName() +
+                    " (" + student.getDepartment().getDepartmentName() + "), ";
         }
-        result += System.lineSeparator();
+        result += "\n";
 
         result += "Assignment weights valid: " + isAssignmentWeightValid();
 
