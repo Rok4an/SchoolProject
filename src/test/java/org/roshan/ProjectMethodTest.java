@@ -303,4 +303,61 @@ class ProjectMethodsTest {
         assertTrue(student.getRegisteredCourses().contains(course1));
         assertTrue(student.getRegisteredCourses().contains(course2));
     }
+
+    //Student.dropCourse
+
+    @Test
+    @DisplayName("dropCourse removes course and cleans scores")
+    void testDropCourse1() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+        course.addAssignment("A1", 100, 100);
+
+        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+
+        student.registerCourse(course);
+        boolean result = student.dropCourse(course);
+
+        assertTrue(result);
+        assertFalse(student.getRegisteredCourses().contains(course));
+        assertFalse(course.getRegisteredStudents().contains(student));
+
+        int expectedSize = 0;
+        int actualSize = course.getAssignments().get(0).getScores().size();
+        assertEquals(expectedSize, actualSize);
+    }
+
+    @Test
+    @DisplayName("dropCourse returns false when course not registered")
+    void testDropCourse2() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+
+        boolean result = student.dropCourse(course);
+        assertFalse(result);
+    }
+
+    @Test
+    @DisplayName("dropCourse works when student has multiple courses")
+    void testDropCourse3() {
+        Department department = new Department("Math");
+        Course course1 = new Course("Algebra", 3.0, department);
+        Course course2 = new Course("Calculus", 3.0, department);
+        course1.addAssignment("A1", 100, 100);
+        course2.addAssignment("B1", 100, 100);
+
+        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+
+        student.registerCourse(course1);
+        student.registerCourse(course2);
+
+        boolean dropped = student.dropCourse(course1);
+        assertTrue(dropped);
+        assertFalse(student.getRegisteredCourses().contains(course1));
+        assertTrue(student.getRegisteredCourses().contains(course2));
+    }
 }
