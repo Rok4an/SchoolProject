@@ -103,6 +103,49 @@ public class Course {
     }
 
     public void displayScore() {
+        System.out.println("Course: " + courseName + " (" + courseId + ")");
+        if (registeredStudents.isEmpty()) {
+            System.out.println("No students registered.");
+            return;
+        }
+        if (assignments.isEmpty()) {
+            System.out.println("No assignments.");
+            return;
+        }
 
+        // header
+        System.out.printf("%-20s", "Student");
+        for (Assignment a : assignments) {
+            System.out.printf("%-15s", a.getAssignmentName());
+        }
+        System.out.printf("%-12s%n", "Final");
+
+        // rows
+        int[] avgs = calcStudentsAverage();
+        for (int i = 0; i < registeredStudents.size(); i++) {
+            Student s = registeredStudents.get(i);
+            System.out.printf("%-20s", s.getStudentName());
+            for (Assignment a : assignments) {
+                Integer score = (a.getScores().size() > i) ? a.getScores().get(i) : null;
+                String text = (score == null) ? "-" : String.valueOf(score);
+                System.out.printf("%-15s", text);
+            }
+            System.out.printf("%-12d%n", avgs[i]);
+        }
+
+        // assignment averages row
+        System.out.printf("%-20s", "Average");
+        for (Assignment a : assignments) {
+            double avg = a.calcAssignmentAvg();
+            System.out.printf("%-15.1f", avg);
+        }
+        System.out.println();
+    }
+
+    public String toSimplifiedString() {
+        return "Course ID: " + courseId +
+                ", Name: " + courseName +
+                ", Credits: " + credits +
+                ", Department: " + department.getDepartmentName();
     }
 }
