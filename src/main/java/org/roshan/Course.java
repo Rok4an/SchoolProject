@@ -98,6 +98,7 @@ public class Course {
         for (Assignment assignment : assignments) {
             assignment.generateRandomScore();
         }
+
         this.calcStudentsAverage();
     }
 
