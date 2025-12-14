@@ -177,4 +177,130 @@ class ProjectMethodsTest {
 
         assertTrue(course.isAssignmentWeightValid());
     }
+
+    //Course.calcStudentsAverage
+
+    @Test
+    @DisplayName("calcStudentsAverage one student, two assignments 50/50")
+    void testCalcStudentsAverage1() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+
+        course.addAssignment("A1", 50, 100);
+        course.addAssignment("A2", 50, 100);
+
+        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+
+        boolean registered = student.registerCourse(course);
+        assertTrue(registered);
+
+        course.getAssignments().get(0).getScores().set(0, 80);
+        course.getAssignments().get(1).getScores().set(0, 90);
+
+        int[] actual = course.calcStudentsAverage();
+        int expectedLen = 1;
+        assertEquals(expectedLen, actual.length);
+
+        int expectedScore = 85;
+        assertEquals(expectedScore, actual[0]);
+    }
+
+    @Test
+    @DisplayName("calcStudentsAverage many students (upper bound list size)")
+    void testCalcStudentsAverage2() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+
+        course.addAssignment("A1", 100, 100);
+
+        for (int i = 0; i < 50; i++) {
+            Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+            Student student = new Student("student " + i, Student.Gender.MALE, addr, department);
+            student.registerCourse(course);
+            course.getAssignments().get(0).getScores().set(i, 100);
+        }
+
+        int[] actual = course.calcStudentsAverage();
+        assertEquals(50, actual.length);
+        for (int score : actual) {
+            assertEquals(100, score);
+        }
+    }
+
+    @Test
+    @DisplayName("calcStudentsAverage with all zero scores")
+    void testCalcStudentsAverage3() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+
+        course.addAssignment("A1", 50, 100);
+        course.addAssignment("A2", 50, 100);
+
+        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+
+        student.registerCourse(course);
+
+        course.getAssignments().get(0).getScores().set(0, 0);
+        course.getAssignments().get(1).getScores().set(0, 0);
+
+        int[] actual = course.calcStudentsAverage();
+        assertEquals(1, actual.length);
+        assertEquals(0, actual[0]);
+    }
+
+    //Student.registerCourse
+
+    @Test
+    @DisplayName("registerCourse adds course to student and student to course")
+    void testRegisterCourse1() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+        course.addAssignment("A1", 100, 100);
+
+        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+
+        boolean result = student.registerCourse(course);
+        assertTrue(result);
+        assertTrue(student.getRegisteredCourses().contains(course));
+        assertTrue(course.getRegisteredStudents().contains(student));
+
+        int expectedSlots = 1;
+        int actualSlots = course.getAssignments().get(0).getScores().size();
+        assertEquals(expectedSlots, actualSlots);
+    }
+
+    @Test
+    @DisplayName("registerCourse returns false when course already registered")
+    void testRegisterCourse2() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+
+        boolean first = student.registerCourse(course);
+        boolean second = student.registerCourse(course);
+
+        assertTrue(first);
+        assertFalse(second);
+    }
+
+    @Test
+    @DisplayName("registerCourse works for multiple different courses")
+    void testRegisterCourse3() {
+        Department department = new Department("Math");
+        Course course1 = new Course("Algebra", 3.0, department);
+        Course course2 = new Course("Calculus", 3.0, department);
+
+        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+
+        assertTrue(student.registerCourse(course1));
+        assertTrue(student.registerCourse(course2));
+
+        assertTrue(student.getRegisteredCourses().contains(course1));
+        assertTrue(student.getRegisteredCourses().contains(course2));
+    }
 }
