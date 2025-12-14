@@ -77,4 +77,104 @@ class ProjectMethodsTest {
         double actual = assignment.calcAssignmentAvg();
         assertEquals(expected, actual, 0.0001);
     }
+
+    //Assignment.generateRandomScore
+
+    @Test
+    @DisplayName("generateRandomScore sets all scores between 0 and 100")
+    void testGenerateRandomScore1() {
+        Assignment assignment = new Assignment("Test", 20);
+        assignment.getScores().add(null);
+        assignment.getScores().add(null);
+        assignment.getScores().add(null);
+
+        assignment.generateRandomScore();
+
+        int expectedSize = 3;
+        int actualSize = assignment.getScores().size();
+        assertEquals(expectedSize, actualSize);
+
+        for (Integer score : assignment.getScores()) {
+            assertNotNull(score);
+            assertTrue(score >= 0 && score <= 100);
+        }
+    }
+
+    @Test
+    @DisplayName("generateRandomScore works for many students (upper bound list size)")
+    void testGenerateRandomScore2() {
+        Assignment assignment = new Assignment("BigClass", 20);
+        for (int i = 0; i < 100; i++) {
+            assignment.getScores().add(null);
+        }
+
+        assignment.generateRandomScore();
+
+        int expectedSize = 100;
+        int actualSize = assignment.getScores().size();
+        assertEquals(expectedSize, actualSize);
+
+        for (Integer score : assignment.getScores()) {
+            assertNotNull(score);
+            assertTrue(score >= 0 && score <= 100);
+        }
+    }
+
+    @Test
+    @DisplayName("generateRandomScore works for single student")
+    void testGenerateRandomScore3() {
+        Assignment assignment = new Assignment("Single", 20);
+        assignment.getScores().add(null);
+
+        assignment.generateRandomScore();
+
+        assertEquals(1, assignment.getScores().size());
+        Integer score = assignment.getScores().get(0);
+        assertNotNull(score);
+        assertTrue(score >= 0 && score <= 100);
+    }
+
+    //Course.isAssignmentWeightValid
+
+    @Test
+    @DisplayName("isAssignmentWeightValid -> true when weights sum to 100")
+    void testIsAssignmentWeightValid1() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+
+        course.addAssignment("A1", 40, 100);
+        course.addAssignment("A2", 60, 100);
+
+        boolean expected = true;
+        boolean actual = course.isAssignmentWeightValid();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("isAssignmentWeightValid -> false when weights != 100")
+    void testIsAssignmentWeightValid2() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+
+        course.addAssignment("A1", 30, 100);
+        course.addAssignment("A2", 60, 100);
+
+        boolean expected = false;
+        boolean actual = course.isAssignmentWeightValid();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("isAssignmentWeightValid with many assignments that sum to 100")
+    void testIsAssignmentWeightValid3() {
+        Department department = new Department("Math");
+        Course course = new Course("Algebra", 3.0, department);
+
+        course.addAssignment("A1", 25, 100);
+        course.addAssignment("A2", 25, 100);
+        course.addAssignment("A3", 25, 100);
+        course.addAssignment("A4", 25, 100);
+
+        assertTrue(course.isAssignmentWeightValid());
+    }
 }
