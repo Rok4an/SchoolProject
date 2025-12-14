@@ -13,7 +13,24 @@ public class Department {
 
     private static int nextId = 1;
 
-    private static boolean isDepartmentNameValid(String departmentName) {
+    public Department(String departmentName) {
+
+        if (isDepartmentNameValid(departmentName)) {
+            this.departmentId = String.format("D%02d", nextId++);
+            this.departmentName = Util.toTitleCase(departmentName);
+        } else {
+            this.departmentId = null;
+            this.departmentName = null;
+        }
+    }
+
+    /**
+     * Checks if a department name is valid.
+     * A valid name contains only letters and spaces.
+     * @param departmentName the name to check
+     * @return true if valid, false otherwise
+     */
+    public static boolean isDepartmentNameValid(String departmentName) {
         if (departmentName == null || departmentName.isEmpty()) {
             return false;
         }
@@ -26,20 +43,10 @@ public class Department {
         return true;
     }
 
-    public Department(String departmentName) {
-        if (isDepartmentNameValid(departmentName)) {
-            this.departmentName = departmentName;
-            this.departmentId = String.format("D%02d", nextId++);
-        } else  {
-            this.departmentName = null;
-            this.departmentId = null;
-        }
-    }
-
     public void setDepartmentName(String departmentName) {
         if (isDepartmentNameValid(departmentName)) {
-            this.departmentName = departmentName;
-        } else   {
+            this.departmentName = Util.toTitleCase(departmentName);
+        } else {
             this.departmentName = null;
             this.departmentId = null;
         }
