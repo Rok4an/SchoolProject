@@ -39,6 +39,24 @@ public class Student {
         return false;
     }
 
+    public boolean dropCourse(Course course) {
+        if (!registeredCourses.contains(course)) {
+            return false;
+        }
+        registeredCourses.remove(course);
+        course.getRegisteredStudents().remove(this);
+        return true;
+    }
+
+
+    public String toSimplifiedString() {
+        return "Student{" +
+                "studentId=" + studentId + '\'' +
+                ", studentName=" + studentName + '\'' +
+                ", departmentName=" + department.getDepartmentName() +
+                '}';
+    }
+
     public enum Gender {
         MALE, FEMALE
     }
