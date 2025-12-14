@@ -30,7 +30,7 @@ public class Department {
      * @param departmentName the name to check
      * @return true if valid, false otherwise
      */
-    public static boolean isDepartmentNameValid(String departmentName) {
+    private static boolean isDepartmentNameValid(String departmentName) {
         if (departmentName == null || departmentName.isEmpty()) {
             return false;
         }
