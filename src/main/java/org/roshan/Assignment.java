@@ -33,7 +33,7 @@ public class Assignment {
                 sum += score;
             }
         }
-        return scores.size() > 0 ? sum / scores.size() : 0;
+        return !scores.isEmpty() ? sum / scores.size() : 0;
     }
 
 
