@@ -285,7 +285,7 @@ class ProjectMethodsTest {
         Course course = new Course("Prog4", 3.0, dept);
 
         boolean result = course.addAssignment("A1", 50, 100);
-        Assertions.assertEquals(true, result);
+        Assertions.assertTrue(result);
         Assertions.assertEquals(1, course.getAssignments().size());
     }
 
@@ -298,9 +298,9 @@ class ProjectMethodsTest {
 
         course.addAssignment("A1", 100, 100);
 
-        Assignment a1 = course.getAssignments().get(0);
+        Assignment assignment1 = course.getAssignments().getFirst();
         int expectedSlots = 2;
-        int actualSlots = a1.getScores().size();
+        int actualSlots = assignment1.getScores().size();
         Assertions.assertEquals(expectedSlots, actualSlots);
     }
 
@@ -326,8 +326,8 @@ class ProjectMethodsTest {
         boolean first = course.addAssignment("A1", 50, 100);
         boolean second = course.addAssignment("A1", 50, 100);
 
-        Assertions.assertEquals(true, first);
-        Assertions.assertEquals(false, second);
+        Assertions.assertTrue(first);
+        Assertions.assertFalse(second);
         Assertions.assertEquals(1, course.getAssignments().size());
     }
 
