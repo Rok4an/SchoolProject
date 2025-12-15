@@ -106,11 +106,19 @@ public class Course {
      * @return true always, after adding the assignment
      */
     public boolean addAssignment(String assignmentName, double weight, int maxScore) {
+        for (Assignment a : assignments) {
+            if (a.getAssignmentName().equals(assignmentName)) {
+                return false;
+            }
+        }
+
         Assignment newAssignment = new Assignment(assignmentName, weight);
         assignments.add(newAssignment);
+
         for (int i = 0; i < registeredStudents.size(); i++) {
             newAssignment.getScores().add(null);
         }
+
         return true;
     }
 
