@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 
 class ProjectMethodsTest {
 
+    private static Department dept = new Department("Math");
+    private static Address address = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
+    private static Student s1 = new Student("john doe", Student.Gender.MALE, address, dept);
+
     //Util.toTitleCase
 
     @Test
@@ -45,9 +49,9 @@ class ProjectMethodsTest {
         assignment.getScores().add(null);
         assignment.getScores().add(100);
 
-        double expected = 90.0; // (80 + 100) / 2
+        double expected = 90.0;
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual, 0.0001);
     }
 
     @Test
@@ -60,7 +64,7 @@ class ProjectMethodsTest {
 
         double expected = 100.0;
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual, 0.0001);
     }
 
     @Test
@@ -73,7 +77,7 @@ class ProjectMethodsTest {
 
         double expected = (0 + 50 + 100) / 3.0;
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual, 0.0001);
     }
 
     //Assignment.generateRandomScore
@@ -140,8 +144,7 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("isAssignmentWeightValid -> true when weights sum to 100")
     void testIsAssignmentWeightValid1() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
+        Course course = new Course("Algebra", 3.0, dept);
 
         course.addAssignment("A1", 40, 100);
         course.addAssignment("A2", 60, 100);
@@ -154,8 +157,7 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("isAssignmentWeightValid -> false when weights != 100")
     void testIsAssignmentWeightValid2() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
+        Course course = new Course("Algebra", 3.0, dept);
 
         course.addAssignment("A1", 30, 100);
         course.addAssignment("A2", 60, 100);
@@ -168,8 +170,7 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("isAssignmentWeightValid with many assignments that sum to 100")
     void testIsAssignmentWeightValid3() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
+        Course course = new Course("Algebra", 3.0, dept);
 
         course.addAssignment("A1", 25, 100);
         course.addAssignment("A2", 25, 100);
@@ -186,16 +187,12 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("calcStudentsAverage one student, two assignments 50/50")
     void testCalcStudentsAverage1() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
+        Course course = new Course("Algebra", 3.0, dept);
 
         course.addAssignment("A1", 50, 100);
         course.addAssignment("A2", 50, 100);
 
-        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
-
-        boolean registered = student.registerCourse(course);
+        boolean registered = s1.registerCourse(course);
         Assertions.assertEquals(true, registered);
 
         course.getAssignments().get(0).getScores().set(0, 80);
@@ -212,14 +209,12 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("calcStudentsAverage many students (upper bound list size)")
     void testCalcStudentsAverage2() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
+        Course course = new Course("Algebra", 3.0, dept);
 
         course.addAssignment("A1", 100, 100);
 
         for (int i = 0; i < 50; i++) {
-            Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-            Student student = new Student("student " + i, Student.Gender.MALE, addr, department);
+            Student student = new Student("student " + i, Student.Gender.MALE, address, dept);
             student.registerCourse(course);
             course.getAssignments().get(0).getScores().set(i, 100);
         }
@@ -236,16 +231,12 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("calcStudentsAverage with all zero scores")
     void testCalcStudentsAverage3() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
+        Course course = new Course("Algebra", 3.0, dept);
 
         course.addAssignment("A1", 50, 100);
         course.addAssignment("A2", 50, 100);
 
-        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
-
-        student.registerCourse(course);
+        s1.registerCourse(course);
 
         course.getAssignments().get(0).getScores().set(0, 0);
         course.getAssignments().get(1).getScores().set(0, 0);
@@ -262,17 +253,13 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("registerCourse adds course to student and student to course")
     void testRegisterCourse1() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
+        Course course = new Course("Algebra", 3.0, dept);
         course.addAssignment("A1", 100, 100);
 
-        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
-
-        boolean result = student.registerCourse(course);
+        boolean result = s1.registerCourse(course);
         Assertions.assertEquals(true, result);
-        Assertions.assertEquals(true, student.getRegisteredCourses().contains(course));
-        Assertions.assertEquals(true, course.getRegisteredStudents().contains(student));
+        Assertions.assertEquals(true, s1.getRegisteredCourses().contains(course));
+        Assertions.assertEquals(true, course.getRegisteredStudents().contains(s1));
 
         int expectedSlots = 1;
         int actualSlots = course.getAssignments().get(0).getScores().size();
@@ -282,13 +269,10 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("registerCourse returns false when course already registered")
     void testRegisterCourse2() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
-        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+        Course course = new Course("Algebra", 3.0, dept);
 
-        boolean first = student.registerCourse(course);
-        boolean second = student.registerCourse(course);
+        boolean first = s1.registerCourse(course);
+        boolean second = s1.registerCourse(course);
 
         Assertions.assertEquals(true, first);
         Assertions.assertEquals(false, second);
@@ -297,20 +281,16 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("registerCourse works for multiple different courses")
     void testRegisterCourse3() {
-        Department department = new Department("Math");
-        Course course1 = new Course("Algebra", 3.0, department);
-        Course course2 = new Course("Calculus", 3.0, department);
+        Course course1 = new Course("Algebra", 3.0, dept);
+        Course course2 = new Course("Calculus", 3.0, dept);
 
-        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
-
-        boolean r1 = student.registerCourse(course1);
-        boolean r2 = student.registerCourse(course2);
+        boolean r1 = s1.registerCourse(course1);
+        boolean r2 = s1.registerCourse(course2);
 
         Assertions.assertEquals(true, r1);
         Assertions.assertEquals(true, r2);
-        Assertions.assertEquals(true, student.getRegisteredCourses().contains(course1));
-        Assertions.assertEquals(true, student.getRegisteredCourses().contains(course2));
+        Assertions.assertEquals(true, s1.getRegisteredCourses().contains(course1));
+        Assertions.assertEquals(true, s1.getRegisteredCourses().contains(course2));
     }
 
     //Student.dropCourse
@@ -318,19 +298,15 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("dropCourse removes course and cleans scores")
     void testDropCourse1() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
+        Course course = new Course("Algebra", 3.0, dept);
         course.addAssignment("A1", 100, 100);
 
-        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
-
-        student.registerCourse(course);
-        boolean result = student.dropCourse(course);
+        s1.registerCourse(course);
+        boolean result = s1.dropCourse(course);
 
         Assertions.assertEquals(true, result);
-        Assertions.assertEquals(false, student.getRegisteredCourses().contains(course));
-        Assertions.assertEquals(false, course.getRegisteredStudents().contains(student));
+        Assertions.assertEquals(false, s1.getRegisteredCourses().contains(course));
+        Assertions.assertEquals(false, course.getRegisteredStudents().contains(s1));
 
         int expectedSize = 0;
         int actualSize = course.getAssignments().get(0).getScores().size();
@@ -340,33 +316,26 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("dropCourse returns false when course not registered")
     void testDropCourse2() {
-        Department department = new Department("Math");
-        Course course = new Course("Algebra", 3.0, department);
-        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+        Course course = new Course("Algebra", 3.0, dept);
 
-        boolean result = student.dropCourse(course);
+        boolean result = s1.dropCourse(course);
         Assertions.assertEquals(false, result);
     }
 
     @Test
     @DisplayName("dropCourse works when student has multiple courses")
     void testDropCourse3() {
-        Department department = new Department("Math");
-        Course course1 = new Course("Algebra", 3.0, department);
-        Course course2 = new Course("Calculus", 3.0, department);
+        Course course1 = new Course("Algebra", 3.0, dept);
+        Course course2 = new Course("Calculus", 3.0, dept);
         course1.addAssignment("A1", 100, 100);
         course2.addAssignment("B1", 100, 100);
 
-        Address addr = new Address(1, "Main", "Montreal", Address.Province.QC, "A1B2C3");
-        Student student = new Student("john doe", Student.Gender.MALE, addr, department);
+        s1.registerCourse(course1);
+        s1.registerCourse(course2);
 
-        student.registerCourse(course1);
-        student.registerCourse(course2);
-
-        boolean dropped = student.dropCourse(course1);
+        boolean dropped = s1.dropCourse(course1);
         Assertions.assertEquals(true, dropped);
-        Assertions.assertEquals(false, student.getRegisteredCourses().contains(course1));
-        Assertions.assertEquals(true, student.getRegisteredCourses().contains(course2));
+        Assertions.assertEquals(false, s1.getRegisteredCourses().contains(course1));
+        Assertions.assertEquals(true, s1.getRegisteredCourses().contains(course2));
     }
 }
