@@ -51,7 +51,7 @@ class ProjectMethodsTest {
 
         double expected = 90.0;
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -64,7 +64,7 @@ class ProjectMethodsTest {
 
         double expected = 100.0;
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -77,7 +77,7 @@ class ProjectMethodsTest {
 
         double expected = (0 + 50 + 100) / 3.0;
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual);
     }
 
     //Assignment.generateRandomScore
