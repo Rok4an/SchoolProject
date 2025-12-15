@@ -204,7 +204,7 @@ class ProjectMethodsTest {
         Assertions.assertEquals(expectedLen, actual.length);
 
         int expectedScore = 85;
-        Assertions.assertEquals(expectedScore, actual[85]);
+        Assertions.assertEquals(expectedScore, actual[0]);
     }
 
     @Test
@@ -273,8 +273,62 @@ class ProjectMethodsTest {
 
         int expectedScoreS1 = 85;
         int expectedScoreS2 = 80;
-        Assertions.assertEquals(expectedScoreS1, actual[85]);
-        Assertions.assertEquals(expectedScoreS2, actual[80]);
+        Assertions.assertEquals(expectedScoreS1, actual[0]);
+        Assertions.assertEquals(expectedScoreS2, actual[1]);
+    }
+
+    //addAssignment
+
+    @Test
+    @DisplayName("addAssignment increases assignments size")
+    void addAssignment1() {
+        Course course = new Course("Prog4", 3.0, dept);
+
+        boolean result = course.addAssignment("A1", 50, 100);
+        Assertions.assertEquals(true, result);
+        Assertions.assertEquals(1, course.getAssignments().size());
+    }
+
+    @Test
+    @DisplayName("addAssignment creates score slots for existing students")
+    void addAssignment2() {
+        Course course = new Course("Prog5", 3.0, dept);
+        s1.registerCourse(course);
+        s2.registerCourse(course);
+
+        course.addAssignment("A1", 100, 100);
+
+        Assignment a1 = course.getAssignments().get(0);
+        int expectedSlots = 2;
+        int actualSlots = a1.getScores().size();
+        Assertions.assertEquals(expectedSlots, actualSlots);
+    }
+
+    @Test
+    @DisplayName("addAssignment can be called multiple times")
+    void addAssignment3() {
+        Course course = new Course("Prog6", 3.0, dept);
+
+        course.addAssignment("A1", 30, 100);
+        course.addAssignment("A2", 30, 100);
+        course.addAssignment("A3", 40, 100);
+
+        int expectedSize = 3;
+        int actualSize = course.getAssignments().size();
+        Assertions.assertEquals(expectedSize, actualSize);
+    }
+
+    @Test
+    @DisplayName("addAssignment returns false for duplicate name")
+    void addAssignment4() {
+        Course course = new Course("Prog7", 3.0, dept);
+
+        boolean first = course.addAssignment("A1", 50, 100);
+        boolean second = course.addAssignment("A1", 50, 100);
+
+        Assertions.assertEquals(true, first);
+        Assertions.assertEquals(false, second);
+        Assertions.assertEquals(1, course.getAssignments().size());
     }
 
     //Student.registerCourse
