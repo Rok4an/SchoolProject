@@ -29,8 +29,8 @@ class ProjectMethodsTest {
     @Test
     @DisplayName("toTitleCase long string still works")
     void testToTitleCase3() {
-        String input = "very long department name with many words";
-        String expected = "Very Long Department Name With Many Words";
+        String input = "very lonnnnnnnnng string";
+        String expected = "Very Lonnnnnnnnng String";
         String actual = Util.toTitleCase(input);
         Assertions.assertEquals(expected, actual);
     }
@@ -47,33 +47,33 @@ class ProjectMethodsTest {
 
         double expected = 90.0; // (80 + 100) / 2
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("calcAssignmentAvg with all scores at upper limit 100")
     void testCalcAssignmentAvg2() {
-        Assignment assignment = new Assignment("MaxTest", 20);
+        Assignment assignment = new Assignment("Final Test", 20);
         assignment.getScores().add(100);
         assignment.getScores().add(100);
         assignment.getScores().add(100);
 
         double expected = 100.0;
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("calcAssignmentAvg with zeros and positives")
     void testCalcAssignmentAvg3() {
-        Assignment assignment = new Assignment("MixTest", 20);
+        Assignment assignment = new Assignment("Mid Term Test", 20);
         assignment.getScores().add(0);
         assignment.getScores().add(50);
         assignment.getScores().add(100);
 
         double expected = (0 + 50 + 100) / 3.0;
         double actual = assignment.calcAssignmentAvg();
-        Assertions.assertEquals(expected, actual, 0.0001);
+        Assertions.assertEquals(expected, actual);
     }
 
     //Assignment.generateRandomScore
@@ -93,7 +93,6 @@ class ProjectMethodsTest {
         Assertions.assertEquals(expectedSize, actualSize);
 
         for (Integer score : assignment.getScores()) {
-            // score between 0 and 100
             boolean inRange = (score != null && score >= 0 && score <= 100);
             Assertions.assertEquals(true, inRange);
         }
