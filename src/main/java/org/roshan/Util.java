@@ -2,14 +2,13 @@ package org.roshan;
 
 public class Util {
 
-    /**
-     * Converts each word in a string to title case.
+    /** Converts each word in a string to title case.
      * Each word is assumed to be separated by a single space.
      * The first letter of each word is converted to uppercase,
      * and the remaining letters are converted to lowercase.
      * @param str the input string to convert
      * @return the converted string in title case,
-     *         or the original string if it is null or empty
+     * or the original string if it is null or empty
      */
     public static String toTitleCase(String str) {
         if (str == null || str.isEmpty()) {
